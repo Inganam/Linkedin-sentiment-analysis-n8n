@@ -1,0 +1,345 @@
+{
+  "name": "AI LinkedIn Scrape",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "748a672c-667b-4fa2-bb1c-d6e8ee84da02",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://api.apify.com/v2/datasets/Pi0gNLX5TGBunVQhc/items?format=json&clean=true",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        160,
+        0
+      ],
+      "id": "28e536b9-c897-4611-8930-7e332deb8621",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        400,
+        224
+      ],
+      "id": "688ef4b5-69ac-4029-bb41-a5403bb3fde2",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "1To6G0jFlwL9fzmd",
+          "name": "Groq account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.post.text }}",
+        "options": {
+          "categories": "Positive, Neutral, Negative"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1.1,
+      "position": [
+        368,
+        -16
+      ],
+      "id": "7f36eea7-3f60-4b24-b5dc-4413d4b38285",
+      "name": "Sentiment Analysis"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "16r32UuzJp_ue7iIwqsXoWabQh9Pt5dkh-1stJ_jyrVk",
+          "mode": "list",
+          "cachedResultName": "AI LinkedIn scrape data with sentiment analysis",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16r32UuzJp_ue7iIwqsXoWabQh9Pt5dkh-1stJ_jyrVk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1330513185,
+          "mode": "list",
+          "cachedResultName": "Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16r32UuzJp_ue7iIwqsXoWabQh9Pt5dkh-1stJ_jyrVk/edit#gid=1330513185"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Author Name": "={{ $json.author.name }}",
+            "Comments Count": "={{ $json.stats.comments }}",
+            "Reposts Count": "={{ $json.stats.shares }}",
+            "Date Posted": "={{ $json.post.created_at.date }}",
+            "Likes Count": "={{ $json.stats.total_reactions }}",
+            "Post URL": "={{ $json.post.url }}",
+            "Post Content": "={{ $json.post.text }}",
+            "sentiment": "={{ $json.sentimentAnalysis.category }}",
+            "row_number": 0
+          },
+          "matchingColumns": [
+            "Post Content"
+          ],
+          "schema": [
+            {
+              "id": "Author Name",
+              "displayName": "Author Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Post Content",
+              "displayName": "Post Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Post URL",
+              "displayName": "Post URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Likes Count",
+              "displayName": "Likes Count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Comments Count",
+              "displayName": "Comments Count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reposts Count",
+              "displayName": "Reposts Count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Posted",
+              "displayName": "Date Posted",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sentiment",
+              "displayName": "sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        -16
+      ],
+      "id": "f14ca7d9-f139-4d7d-91e2-6cbb79ff1d59",
+      "name": "Update row in sheet",
+      "executeOnce": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vpvdMXgQv5VPXi3Y",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A791J0QV6",
+          "mode": "list",
+          "cachedResultName": "all-ai-linkedin-scrape"
+        },
+        "text": "=I found a post by {{ $('Sentiment Analysis').item.json.author.name }} with a {{ $('Sentiment Analysis').item.json.sentimentAnalysis.category }} score.",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        1296,
+        -16
+      ],
+      "id": "d5471e6f-a69b-4c42-8459-8c405c361b26",
+      "name": "Send a message",
+      "webhookId": "e03e2ee4-a095-4fcc-b1ab-7698b769aa62",
+      "credentials": {
+        "slackApi": {
+          "id": "MAQWbr7qVpg2EThI",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        -16
+      ],
+      "id": "cd5f5ddc-7236-42bf-bee2-b7cce268eef5",
+      "name": "Limit"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Analysis": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "ac89ac20-7c16-4142-ac87-6972d118c9e4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f903e9601053468df691cdc617b5a8bde018331342e2bab0751035ec64d9c324"
+  },
+  "id": "ZYTFgWmGxDNTBK1S",
+  "tags": []
+}
