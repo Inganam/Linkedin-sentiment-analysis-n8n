@@ -26,10 +26,10 @@ The **Report** tab in Google Sheets includes:
 This tab serves as the project’s automated report output.
 
 ## Files in This Repository
-- `AI LinkedIn scrape.csv` – Scraped and AI-processed LinkedIn post data
+- `AI LinkedIn scrape - Data.csv` – Scraped and AI-processed LinkedIn post data
 - `AI LinkedIn scrape workflow.json` – Exported n8n workflow
 - `AI LinkeIn scrape workflow.png` – Screenshot of n8n workflow
-- `Spreadsheet.png` – Screenshot of the Google Sheets data
+- `AI LinkeIn scrape - Automated report` – Google Sheets automated report output
 - `report.png` – Screenshot of the Google Sheets automated report
 - `slack_notification.png` – Screenshot of the Slack insight message
 
